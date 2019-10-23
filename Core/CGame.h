@@ -11,6 +11,10 @@ public:
 public:
 	void Create(HINSTANCE hInstance, WNDPROC WndProc, const std::string& WindowName);
 
+	void BeginRendering(const float* ColorRGBA);
+
+	void EndRendering();
+
 private:
 	void CreateWin32Window(const std::string& WindowName);
 

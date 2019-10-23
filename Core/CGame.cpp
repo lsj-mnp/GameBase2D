@@ -12,6 +12,16 @@ void CGame::Create(HINSTANCE hInstance, WNDPROC WndProc, const string& WindowNam
 	InitializeDirectX();
 }
 
+void CGame::BeginRendering(const float* ColorRGBA)
+{
+	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), ColorRGBA);
+}
+
+void CGame::EndRendering()
+{
+	m_SwapChain->Present(0, 0);
+}
+
 void CGame::CreateWin32Window(const string& WindowName)
 {
 	WNDCLASSEX wnd_cls{};

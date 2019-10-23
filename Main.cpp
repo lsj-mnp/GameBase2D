@@ -10,6 +10,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	MSG Msg{};
 
+	float BackgroundColor[]{ 0.0f, 0.0f, 0.0f, 1.0f };
+
 	while (true)
 	{
 		if (PeekMessage(&Msg, nullptr, 0, 0, PM_REMOVE))
@@ -25,7 +27,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		else
 		{
+			Game.BeginRendering(BackgroundColor);
 
+			Game.EndRendering();
 		}
 	}
 
