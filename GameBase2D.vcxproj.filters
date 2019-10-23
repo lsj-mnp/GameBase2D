@@ -16,6 +16,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{b4fa5e92-12bd-473c-ba63-fb427a34189f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{961db2d8-6b52-4c34-bc70-58712e3e061b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -23,6 +26,9 @@
     </ClCompile>
     <ClCompile Include="Core\CGame.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CShader.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,5 +38,16 @@
     <ClInclude Include="Core\SharedHeader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\CShader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\VertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\PixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
