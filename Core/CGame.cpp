@@ -10,6 +10,10 @@ void CGame::Create(HINSTANCE hInstance, WNDPROC WndProc, const string& WindowNam
 	CreateWin32Window(WindowName);
 
 	InitializeDirectX();
+
+	m_VertexShader->Create(EShaderType::VertexShader, L"VertexShader.hlsl");
+
+	m_PixelShader->Create(EShaderType::PixelShader, L"PixelShader.hlsl");
 }
 
 void CGame::BeginRendering(const float* ColorRGBA)

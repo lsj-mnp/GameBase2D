@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SharedHeader.h"
+#include "CShader.h"
 
 class CGame
 {
@@ -14,6 +15,7 @@ public:
 	void BeginRendering(const float* ColorRGBA);
 
 	void EndRendering();
+
 
 private:
 	void CreateWin32Window(const std::string& WindowName);
@@ -32,6 +34,10 @@ private:
 
 	float m_Width{};
 	float m_Height{};
+
+private:
+	std::unique_ptr<CShader> m_VertexShader{};
+	std::unique_ptr<CShader> m_PixelShader{};
 
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain{};
