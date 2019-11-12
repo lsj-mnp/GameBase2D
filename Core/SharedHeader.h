@@ -12,4 +12,10 @@
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "../DirectXTK/DirectXTK.lib")
+#pragma comment(lib, "DirectXTK.lib")
+
+enum class EShaderType
+{
+	VertexShader,
+	PixelShader
+};

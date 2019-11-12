@@ -4,7 +4,11 @@
 
 struct SVertex2D
 {
+	SVertex2D() {}
+	SVertex2D(DirectX::XMFLOAT2 _Position, DirectX::XMFLOAT2 _TexCoord) : Position{ _Position }, TexCoord{ _TexCoord }{}
+
 	DirectX::XMFLOAT2 Position{};
+	DirectX::XMFLOAT2 TexCoord{};
 };
 
 class CObject2D
@@ -21,9 +25,9 @@ public:
 		}
 		~CModel2D() {}
 
-		void CreateRectangle();
+		void CreateRectangle(const DirectX::XMFLOAT2& Size);
 
-		void Use();
+		void Draw();
 
 	private:
 		ID3D11Device* const m_PtrDevice{};
@@ -31,6 +35,7 @@ public:
 
 	private:
 		std::vector<SVertex2D> m_vVertices{};
+		DirectX::XMFLOAT2 m_Size{};
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_VertexBuffer{};
@@ -50,12 +55,26 @@ public:
 		}
 		~CTexture() {}
 
+	public:
+		void CreateFromFile(const std::string& FileName);
+
+		void SetShaderType(EShaderType eShaderType);
+
+		void SetSlot(UINT Slot);
+
+		void Use();
+
 	private:
 		ID3D11Device* const m_PtrDevice{};
 		ID3D11DeviceContext* const m_PtrDeviceContext{};
 
 	private:
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> m_Texture2D{};
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_ShaderResourceView{};
 
+	private:
+		EShaderType m_eShaderType{};
+		UINT m_Slot{};
 	};
 
 public:
@@ -67,13 +86,16 @@ public:
 	}
 	~CObject2D() {}
 
+public:
+	void Create(const DirectX::XMFLOAT2& Size, const std::string& TextureFileName);
 
+	void Draw();
 
 private:
 	ID3D11Device* const m_PtrDevice{};
 	ID3D11DeviceContext* const m_PtrDeviceContext{};
 
 private:
-	std::unique_ptr<CModel2D> m_Model{};
+	std::unique_ptr<CModel2D> m_Model2D{};
 	std::unique_ptr<CTexture> m_Texture{};
 };

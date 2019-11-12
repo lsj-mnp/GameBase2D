@@ -8,18 +8,20 @@ void CShader::Create(EShaderType eShaderType, const std::wstring& FileName)
 	{
 	case EShaderType::VertexShader:
 		D3DCompileFromFile(FileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_4_0",
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, m_Blob.GetAddressOf(), nullptr);
+			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, m_Blob.ReleaseAndGetAddressOf(), nullptr);
 
-		m_PtrDevice->CreateVertexShader(m_Blob->GetBufferPointer(), m_Blob->GetBufferSize(), nullptr, (ID3D11VertexShader**)m_Shader.GetAddressOf());
+		m_PtrDevice->CreateVertexShader(m_Blob->GetBufferPointer(), m_Blob->GetBufferSize(), nullptr,
+			(ID3D11VertexShader**)m_Shader.ReleaseAndGetAddressOf());
 
 		m_PtrDevice->CreateInputLayout(KInputElementDesc, ARRAYSIZE(KInputElementDesc), m_Blob->GetBufferPointer(),
-			m_Blob->GetBufferSize(), m_InputLayout.GetAddressOf());
+			m_Blob->GetBufferSize(), m_InputLayout.ReleaseAndGetAddressOf());
 		break;
 	case EShaderType::PixelShader:
 		D3DCompileFromFile(FileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0",
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, m_Blob.GetAddressOf(), nullptr);
+			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, m_Blob.ReleaseAndGetAddressOf(), nullptr);
 
-		m_PtrDevice->CreatePixelShader(m_Blob->GetBufferPointer(), m_Blob->GetBufferSize(), nullptr, (ID3D11PixelShader**)m_Shader.GetAddressOf());
+		m_PtrDevice->CreatePixelShader(m_Blob->GetBufferPointer(), m_Blob->GetBufferSize(), nullptr, 
+			(ID3D11PixelShader**)m_Shader.ReleaseAndGetAddressOf());
 		break;
 	default:
 		break;
@@ -82,7 +84,7 @@ void CShader::CConstantBuffer::Create(EShaderType eShaderType, UINT ByteWidth, c
 
 	m_SubresourceData.pSysMem = pData;
 
-	m_PtrDevice->CreateBuffer(&m_BufferDesc, &m_SubresourceData, m_ConstantBuffer.GetAddressOf());
+	m_PtrDevice->CreateBuffer(&m_BufferDesc, &m_SubresourceData, m_ConstantBuffer.ReleaseAndGetAddressOf());
 }
 
 void CShader::CConstantBuffer::Update()

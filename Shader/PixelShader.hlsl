@@ -1,4 +1,9 @@
-float4 main() : SV_TARGET
+#include "Header.hlsli"
+
+SamplerState Sampler : register(s0);
+Texture2D Texture : register(t0);
+
+float4 main(VS_OUTPUT Input) : SV_TARGET
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+	return Texture.Sample(Sampler, Input.TexCoord);
 }

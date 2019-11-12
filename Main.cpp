@@ -8,6 +8,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	Game.Create(hInstance, WndProc, "GameBase");
 
+	Game.AddObject2D(DirectX::XMFLOAT2(600.0f, 400.0f), "Asset/flight.png");
+
 	MSG Msg{};
 
 	float BackgroundColor[]{ 0.0f, 0.0f, 0.0f, 1.0f };
@@ -28,6 +30,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		else
 		{
 			Game.BeginRendering(BackgroundColor);
+
+			Game.Draw();
 
 			Game.EndRendering();
 		}
