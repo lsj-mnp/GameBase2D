@@ -60,6 +60,69 @@ void CObject2D::Draw()
 	m_Model2D->Draw();
 }
 
+void CObject2D::Translate(const DirectX::XMVECTOR& Translation)
+{
+	using namespace DirectX;
+
+	m_ComponentTransform.Translation += Translation;
+
+	UpdateWorldMatrix();
+}
+
+void CObject2D::Rotate(const DirectX::XMVECTOR& Rotation)
+{
+	using namespace DirectX;
+
+	m_ComponentTransform.Rotation += Rotation;
+
+	UpdateWorldMatrix();
+}
+
+void CObject2D::Scale(const DirectX::XMVECTOR& Scaling)
+{
+	using namespace DirectX;
+
+	m_ComponentTransform.Scaling += Scaling;
+
+	UpdateWorldMatrix();
+}
+
+void CObject2D::TranslateTo(const DirectX::XMVECTOR& Translation)
+{
+	using namespace DirectX;
+
+	m_ComponentTransform.Translation = Translation;
+
+	UpdateWorldMatrix();
+}
+
+void CObject2D::RotateTo(const DirectX::XMVECTOR& Rotation)
+{
+	using namespace DirectX;
+
+	m_ComponentTransform.Rotation = Rotation;
+
+	UpdateWorldMatrix();
+}
+
+void CObject2D::ScaleTo(const DirectX::XMVECTOR& Scaling)
+{
+	using namespace DirectX;
+
+	m_ComponentTransform.Scaling = Scaling;
+
+	UpdateWorldMatrix();
+}
+
+void CObject2D::UpdateWorldMatrix()
+{
+	DirectX::XMMATRIX Translation{ DirectX::XMMatrixTranslationFromVector(m_ComponentTransform.Translation) };
+	DirectX::XMMATRIX Rotation{ DirectX::XMMatrixRotationRollPitchYawFromVector(m_ComponentTransform.Rotation) };
+	DirectX::XMMATRIX Scaling{ DirectX::XMMatrixScalingFromVector(m_ComponentTransform.Scaling) };
+
+	m_ComponentTransform.WorldMatrix = Scaling * Rotation * Translation;
+}
+
 void CObject2D::CTexture::CreateFromFile(const std::string& FileName)
 {
 	std::wstring wFileName{ FileName.begin(), FileName.end() };

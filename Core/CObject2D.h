@@ -14,6 +14,15 @@ struct SVertex2D
 class CObject2D
 {
 public:
+	struct SComponentTransform
+	{
+		DirectX::XMMATRIX WorldMatrix{};
+		DirectX::XMVECTOR Translation{};
+		DirectX::XMVECTOR Rotation{};
+		DirectX::XMVECTOR Scaling{};
+	};
+
+public:
 	class CModel2D
 	{
 	public:
@@ -91,6 +100,22 @@ public:
 
 	void Draw();
 
+public:
+	void Translate(const DirectX::XMVECTOR& Translation);
+
+	void Rotate(const DirectX::XMVECTOR& Rotation);
+
+	void Scale(const DirectX::XMVECTOR& Scaling);
+
+	void TranslateTo(const DirectX::XMVECTOR& Translation);
+
+	void RotateTo(const DirectX::XMVECTOR& Rotation);
+
+	void ScaleTo(const DirectX::XMVECTOR& Scaling);
+
+private:
+	void UpdateWorldMatrix();
+
 private:
 	ID3D11Device* const m_PtrDevice{};
 	ID3D11DeviceContext* const m_PtrDeviceContext{};
@@ -98,4 +123,5 @@ private:
 private:
 	std::unique_ptr<CModel2D> m_Model2D{};
 	std::unique_ptr<CTexture> m_Texture{};
+	SComponentTransform m_ComponentTransform{};
 };
