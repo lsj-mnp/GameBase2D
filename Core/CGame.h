@@ -7,9 +7,11 @@
 class CGame
 {
 public:
-	struct SCBVSSpace
+	struct SCBSpace
 	{
-		DirectX::XMMATRIX ProjectionMatrix{};
+		//DirectX::XMMATRIX ProjectionMatrix{};
+		DirectX::XMMATRIX WorldMatrix{};
+		DirectX::XMMATRIX WorldProjection{};
 	};
 
 public:
@@ -18,16 +20,6 @@ public:
 
 public:
 	void Create(HINSTANCE hInstance, WNDPROC WndProc, const std::string& WindowName);
-
-public:
-	void AddObject2D(const DirectX::XMFLOAT2& Size, const std::string& TextureFileName);
-
-public:
-	void BeginRendering(const float* ColorRGBA);
-
-	void Draw();
-
-	void EndRendering();
 
 private:
 	void CreateWin32Window(const std::string& WindowName);
@@ -46,6 +38,24 @@ private:
 	void CreateSamplers();
 
 	void CreateBlendStates();
+
+public:
+	void AddObject2D(const DirectX::XMFLOAT2& Size, const std::string& TextureFileName);
+
+public:
+	void SetPlayerObject2D(int Index);
+
+	CObject2D* GetPlayerObject2D() const;
+
+public:
+	void BeginRendering(const float* ColorRGBA);
+
+	void Draw();
+
+	void EndRendering();
+
+public:
+	DirectX::Keyboard::State GetKeyboardState() const;
 
 private:
 	HINSTANCE m_hInstance{};
@@ -75,5 +85,11 @@ private:
 
 private:
 	DirectX::XMMATRIX m_ProjectionMatrix{};
-	SCBVSSpace m_CBVSSpace{};
+	SCBSpace m_CBSpace{};
+
+private:
+	DirectX::Keyboard m_Keyboard{};
+
+private:
+	int m_PlayerObject2DIndex{};
 };

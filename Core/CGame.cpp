@@ -13,47 +13,14 @@ void CGame::Create(HINSTANCE hInstance, WNDPROC WndProc, const string& WindowNam
 
 	m_VertexShader = std::make_unique<CShader>(m_Device.Get(), m_DeviceContext.Get());
 	m_VertexShader->Create(EShaderType::VertexShader, L"Shader/VertexShader.hlsl");
-	m_VertexShader->AddConstantBuffer(sizeof(SCBVSSpace), &m_CBVSSpace);
-	m_CBVSSpace.ProjectionMatrix = m_ProjectionMatrix;
+	m_VertexShader->AddConstantBuffer(sizeof(SCBSpace), &m_CBSpace);
+	//m_CBSpace.ProjectionMatrix = m_ProjectionMatrix;
 	m_VertexShader->UpdateConstantBuffers();
 
 	m_PixelShader = std::make_unique<CShader>(m_Device.Get(), m_DeviceContext.Get());
 	m_PixelShader->Create(EShaderType::PixelShader, L"Shader/PixelShader.hlsl");
 }
 
-void CGame::AddObject2D(const DirectX::XMFLOAT2& Size, const std::string& TextureFileName)
-{
-	m_vObject2Ds.emplace_back(std::make_unique<CObject2D>(m_Device.Get(), m_DeviceContext.Get()));
-
-	m_vObject2Ds.back()->Create(Size, TextureFileName);
-}
-
-void CGame::BeginRendering(const float* ColorRGBA)
-{
-	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), ColorRGBA);
-}
-
-void CGame::Draw()
-{
-	m_VertexShader->Use();
-	m_PixelShader->Use();
-
-	m_DeviceContext->PSSetSamplers(0, 1, m_SamplerStateLinearWrap.GetAddressOf());
-
-	m_DeviceContext->OMSetBlendState(m_BlendStateAlpha.Get(), nullptr, 0xFFFFFFFF);
-
-	SetViewport();
-
-	for (auto& Object2D : m_vObject2Ds)
-	{
-		Object2D->Draw();
-	}
-}
-
-void CGame::EndRendering()
-{
-	m_SwapChain->Present(0, 0);
-}
 
 void CGame::CreateWin32Window(const std::string& WindowName)
 {
@@ -174,6 +141,73 @@ void CGame::CreateBlendStates()
 	blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
 	blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
 	blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
-	
+
 	m_Device->CreateBlendState(&blend_desc, m_BlendStateAlpha.ReleaseAndGetAddressOf());
+}
+
+void CGame::AddObject2D(const DirectX::XMFLOAT2& Size, const std::string& TextureFileName)
+{
+	m_vObject2Ds.emplace_back(std::make_unique<CObject2D>(m_Device.Get(), m_DeviceContext.Get()));
+
+	m_vObject2Ds.back()->Create(Size, TextureFileName);
+}
+
+void CGame::SetPlayerObject2D(int Index)
+{
+	m_PlayerObject2DIndex = Index;
+}
+
+CObject2D* CGame::GetPlayerObject2D() const
+{
+	return m_vObject2Ds[m_PlayerObject2DIndex].get();
+}
+
+void CGame::BeginRendering(const float* ColorRGBA)
+{
+	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), ColorRGBA);
+}
+
+void CGame::Draw()
+{
+	m_VertexShader->Use();
+	m_PixelShader->Use();
+
+	m_DeviceContext->PSSetSamplers(0, 1, m_SamplerStateLinearWrap.GetAddressOf());
+
+	m_DeviceContext->OMSetBlendState(m_BlendStateAlpha.Get(), nullptr, 0xFFFFFFFF);
+
+	SetViewport();
+
+	for (int iObject2D = 0; iObject2D < (int)m_vObject2Ds.size(); ++iObject2D)
+	{
+		if (iObject2D == m_PlayerObject2DIndex) continue;
+
+		CObject2D* const Object2D{ m_vObject2Ds[iObject2D].get() };
+
+		m_CBSpace.WorldMatrix = DirectX::XMMatrixTranspose(Object2D->GetWorldMatrix());
+		m_CBSpace.WorldProjection = DirectX::XMMatrixTranspose(Object2D->GetWorldMatrix() * m_ProjectionMatrix);
+
+		m_VertexShader->UpdateConstantBuffers();
+
+		Object2D->Draw();
+	}
+
+	CObject2D* const PlayerObject2D{ m_vObject2Ds[m_PlayerObject2DIndex].get() };
+
+	m_CBSpace.WorldMatrix = DirectX::XMMatrixTranspose(PlayerObject2D->GetWorldMatrix());
+	m_CBSpace.WorldProjection = DirectX::XMMatrixTranspose(PlayerObject2D->GetWorldMatrix() * m_ProjectionMatrix);
+
+	m_VertexShader->UpdateConstantBuffers();
+
+	PlayerObject2D->Draw();
+}
+
+void CGame::EndRendering()
+{
+	m_SwapChain->Present(0, 0);
+}
+
+DirectX::Keyboard::State CGame::GetKeyboardState() const
+{
+	return m_Keyboard.GetState();
 }

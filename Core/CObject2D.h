@@ -16,10 +16,10 @@ class CObject2D
 public:
 	struct SComponentTransform
 	{
-		DirectX::XMMATRIX WorldMatrix{};
+		DirectX::XMMATRIX WorldMatrix{ DirectX::XMMatrixIdentity() };
 		DirectX::XMVECTOR Translation{};
 		DirectX::XMVECTOR Rotation{};
-		DirectX::XMVECTOR Scaling{};
+		DirectX::XMVECTOR Scaling{ 1, 1, 1, 0 };
 	};
 
 public:
@@ -34,6 +34,7 @@ public:
 		}
 		~CModel2D() {}
 
+	public:
 		void CreateRectangle(const DirectX::XMFLOAT2& Size);
 
 		void Draw();
@@ -96,6 +97,17 @@ public:
 	~CObject2D() {}
 
 public:
+	void* operator new(size_t ByteSize)
+	{
+		return _aligned_malloc(ByteSize, 16);
+	}
+
+	void operator delete(void* Ptr)
+	{
+		_aligned_free(Ptr);
+	}
+
+public:
 	void Create(const DirectX::XMFLOAT2& Size, const std::string& TextureFileName);
 
 	void Draw();
@@ -112,6 +124,8 @@ public:
 	void RotateTo(const DirectX::XMVECTOR& Rotation);
 
 	void ScaleTo(const DirectX::XMVECTOR& Scaling);
+
+	const DirectX::XMMATRIX& GetWorldMatrix() const;
 
 private:
 	void UpdateWorldMatrix();

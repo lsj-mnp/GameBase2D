@@ -114,6 +114,11 @@ void CObject2D::ScaleTo(const DirectX::XMVECTOR& Scaling)
 	UpdateWorldMatrix();
 }
 
+const DirectX::XMMATRIX& CObject2D::GetWorldMatrix() const
+{
+	return m_ComponentTransform.WorldMatrix;
+}
+
 void CObject2D::UpdateWorldMatrix()
 {
 	DirectX::XMMATRIX Translation{ DirectX::XMMatrixTranslationFromVector(m_ComponentTransform.Translation) };
