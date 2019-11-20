@@ -123,12 +123,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\CConstantBuffer.cpp" />
     <ClCompile Include="Core\CGame.cpp" />
     <ClCompile Include="Core\CObject2D.cpp" />
     <ClCompile Include="Core\CShader.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\CConstantBuffer.h" />
     <ClInclude Include="Core\CGame.h" />
     <ClInclude Include="Core\CObject2D.h" />
     <ClInclude Include="Core\CShader.h" />

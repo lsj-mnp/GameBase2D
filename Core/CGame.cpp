@@ -13,12 +13,13 @@ void CGame::Create(HINSTANCE hInstance, WNDPROC WndProc, const string& WindowNam
 
 	m_VertexShader = std::make_unique<CShader>(m_Device.Get(), m_DeviceContext.Get());
 	m_VertexShader->Create(EShaderType::VertexShader, L"Shader/VertexShader.hlsl");
-	m_VertexShader->AddConstantBuffer(sizeof(SCBSpace), &m_CBSpace);
-	//m_CBSpace.ProjectionMatrix = m_ProjectionMatrix;
-	m_VertexShader->UpdateConstantBuffers();
 
 	m_PixelShader = std::make_unique<CShader>(m_Device.Get(), m_DeviceContext.Get());
 	m_PixelShader->Create(EShaderType::PixelShader, L"Shader/PixelShader.hlsl");
+
+	m_CBSpace = std::make_unique<CConstantBuffer>(m_Device.Get(), m_DeviceContext.Get());
+	m_CBSpace->Create(EShaderType::VertexShader, sizeof(SCBSpace), &m_CBSpaceData);
+	m_CBSpace->Use();
 }
 
 
@@ -184,20 +185,20 @@ void CGame::Draw()
 
 		CObject2D* const Object2D{ m_vObject2Ds[iObject2D].get() };
 
-		m_CBSpace.WorldMatrix = DirectX::XMMatrixTranspose(Object2D->GetWorldMatrix());
-		m_CBSpace.WorldProjection = DirectX::XMMatrixTranspose(Object2D->GetWorldMatrix() * m_ProjectionMatrix);
+		m_CBSpaceData.WorldMatrix = DirectX::XMMatrixTranspose(Object2D->GetWorldMatrix());
+		m_CBSpaceData.WorldProjection = DirectX::XMMatrixTranspose(Object2D->GetWorldMatrix() * m_ProjectionMatrix);
 
-		m_VertexShader->UpdateConstantBuffers();
+		m_CBSpace->Update();
 
 		Object2D->Draw();
 	}
 
 	CObject2D* const PlayerObject2D{ m_vObject2Ds[m_PlayerObject2DIndex].get() };
 
-	m_CBSpace.WorldMatrix = DirectX::XMMatrixTranspose(PlayerObject2D->GetWorldMatrix());
-	m_CBSpace.WorldProjection = DirectX::XMMatrixTranspose(PlayerObject2D->GetWorldMatrix() * m_ProjectionMatrix);
+	m_CBSpaceData.WorldMatrix = DirectX::XMMatrixTranspose(PlayerObject2D->GetWorldMatrix());
+	m_CBSpaceData.WorldProjection = DirectX::XMMatrixTranspose(PlayerObject2D->GetWorldMatrix() * m_ProjectionMatrix);
 
-	m_VertexShader->UpdateConstantBuffers();
+	m_CBSpace->Update();
 
 	PlayerObject2D->Draw();
 }

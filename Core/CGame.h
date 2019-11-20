@@ -2,6 +2,7 @@
 
 #include "SharedHeader.h"
 #include "CShader.h"
+#include "CConstantBuffer.h"
 #include "CObject2D.h"
 
 class CGame
@@ -70,6 +71,9 @@ private:
 	std::unique_ptr<CShader> m_PixelShader{};
 
 private:
+	std::unique_ptr<CConstantBuffer> m_CBSpace{};
+
+private:
 	std::vector<std::unique_ptr<CObject2D>> m_vObject2Ds{};
 
 private:
@@ -85,7 +89,7 @@ private:
 
 private:
 	DirectX::XMMATRIX m_ProjectionMatrix{};
-	SCBSpace m_CBSpace{};
+	SCBSpace m_CBSpaceData{};
 
 private:
 	DirectX::Keyboard m_Keyboard{};

@@ -22,6 +22,9 @@
     <ClCompile Include="Core\CObject2D.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\CConstantBuffer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\CGame.h">
@@ -97,6 +100,9 @@
       <Filter>DirectXTK</Filter>
     </ClInclude>
     <ClInclude Include="Core\SharedHeader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CConstantBuffer.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
