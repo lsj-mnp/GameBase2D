@@ -43,6 +43,8 @@ private:
 public:
 	void AddObject2D(const DirectX::XMFLOAT2& Size, const std::string& TextureFileName);
 
+	void AddObject2D(const std::string& TextureFileName);
+
 public:
 	void SetPlayerObject2D(int Index);
 

@@ -153,6 +153,13 @@ void CGame::AddObject2D(const DirectX::XMFLOAT2& Size, const std::string& Textur
 	m_vObject2Ds.back()->Create(Size, TextureFileName);
 }
 
+void CGame::AddObject2D(const std::string& TextureFileName)
+{
+	m_vObject2Ds.emplace_back(std::make_unique<CObject2D>(m_Device.Get(), m_DeviceContext.Get()));
+
+	m_vObject2Ds.back()->CreateAsTextureSize(TextureFileName);
+}
+
 void CGame::SetPlayerObject2D(int Index)
 {
 	m_PlayerObject2DIndex = Index;

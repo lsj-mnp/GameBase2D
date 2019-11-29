@@ -11,7 +11,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	Game.Create(hInstance, WndProc, "GameBase");
 
-	Game.AddObject2D(DirectX::XMFLOAT2(600.0f, 400.0f), "Asset/flight.png");
+	Game.AddObject2D(DirectX::XMFLOAT2(220, 220), "Asset/ship_210_anim.png");
+
+	Game.AddObject2D("Asset/FR.jpg");
 
 	Game.SetPlayerObject2D(0);
 
@@ -19,6 +21,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	float BackgroundColor[]{ 0.0f, 0.0f, 0.0f, 1.0f };
 
+	int iFrame{};
 	while (true)
 	{
 		if (PeekMessage(&Msg, nullptr, 0, 0, PM_REMOVE))
@@ -45,9 +48,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			   
 			Game.BeginRendering(BackgroundColor);
 
+
+			Game.GetPlayerObject2D()->SetVisibleArea(DirectX::XMFLOAT2(iFrame * 220, 0));
+
 			Game.Draw();
 
 			Game.EndRendering();
+
+			++iFrame;
+
+			if (iFrame >= 6) iFrame = 0;
 		}
 	}
 

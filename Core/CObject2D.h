@@ -11,6 +11,14 @@ struct SVertex2D
 	DirectX::XMFLOAT2 TexCoord{};
 };
 
+struct STriangle
+{
+	STriangle() {}
+	STriangle(UINT _0, UINT _1, UINT _2) : Index{ _0, _1, _2 } {}
+
+	UINT Index[3]{};
+};
+
 class CObject2D
 {
 public:
@@ -37,7 +45,12 @@ public:
 	public:
 		void CreateRectangle(const DirectX::XMFLOAT2& Size);
 
+		void UpdateRectangleTexCoord(const DirectX::XMFLOAT2& UVOffset, const DirectX::XMFLOAT2& UVSize);
+
 		void Draw();
+
+	public:
+		const DirectX::XMFLOAT2& GetSize() const;
 
 	private:
 		ID3D11Device* const m_PtrDevice{};
@@ -45,12 +58,14 @@ public:
 
 	private:
 		std::vector<SVertex2D> m_vVertices{};
+		std::vector<STriangle> m_vTriangles{};
 		DirectX::XMFLOAT2 m_Size{};
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_VertexBuffer{};
-		UINT m_Stride{ sizeof(SVertex2D) };
-		UINT m_Offset{};
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_IndexBuffer{};
+		UINT m_VBStride{ sizeof(SVertex2D) };
+		UINT m_VBOffset{};
 	};
 
 public:
@@ -74,6 +89,8 @@ public:
 
 		void Use();
 
+		const D3D11_TEXTURE2D_DESC& GetTextureDesc() const;
+
 	private:
 		ID3D11Device* const m_PtrDevice{};
 		ID3D11DeviceContext* const m_PtrDeviceContext{};
@@ -85,6 +102,7 @@ public:
 	private:
 		EShaderType m_eShaderType{};
 		UINT m_Slot{};
+		D3D11_TEXTURE2D_DESC m_Texture2DDesc{};
 	};
 
 public:
@@ -109,6 +127,10 @@ public:
 
 public:
 	void Create(const DirectX::XMFLOAT2& Size, const std::string& TextureFileName);
+
+	void CreateAsTextureSize(const std::string& TextureFileName);
+
+	void SetVisibleArea(const DirectX::XMFLOAT2& PixelSpaceOffset);
 
 	void Draw();
 
